@@ -404,3 +404,4 @@ TheOrchestrator/.vscode
 /PythonClient/orchestation_data.db
 PythonClient/message_store.db
 PythonClient/application.db
+/Locations

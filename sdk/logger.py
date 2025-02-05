@@ -1,7 +1,9 @@
 from loguru import logger
 import os
-from sdk.config_reader import ConfigReader
+import configparser
 from sdk.contracts.logging import Logging
+
+config = configparser.ConfigParser()
 
 def _get_log_level(level:str):
     
@@ -37,23 +39,23 @@ class Logger:
     @staticmethod
     def _setup_logger():
         try:
-            config_reader = ConfigReader()
+            config.read('config.ini')
 
-            logger_settings = config_reader.section('logging', Logging)            
-            log_level = _get_log_level(logger_settings.level)
-            log_filename =  logger_settings.file_name
-            log_file_path = logger_settings.path
-            max_file_size_mb = logger_settings.max_file_size_in_mb
-            max_number_of_files = logger_settings.max_number_of_files
+            log_level = _get_log_level(config['logging']['level']) 
+            log_filename =  config['logging']['file_name']
+            log_file_path = config['logging']['path']
+            max_file_size_mb = config.getint('logging','max_file_size_in_mb')
+            max_number_of_files = config.getint('logging','max_number_of_files')
+            config_format = config['logging']['log_format']
 
             os.makedirs(log_file_path, exist_ok=True)
 
             log_format:str = None
 
-            if (hasattr(logger_settings, "log_format") == False or logger_settings.log_format == ""):
+            if (config_format == None or config_format == ""):
                 log_format = "{time:YYYY-MM-DD HH:mm:ss.SSS} | {level: <8} | {module}.{function}:{line} - {message}"
             else:
-                log_format = logger_settings.log_format            
+                log_format = config_format        
 
             logger.add(
                 f"{log_file_path}/{log_filename}",
