@@ -1,6 +1,7 @@
 
 from sdk.logger import Logger
 from src.file_processor import FileProcessor
+from src.remote_file_manager import RemoteFileManager
 import configparser
 
 logger = Logger.get_instance()
@@ -13,8 +14,12 @@ def initialize():
 def process_all_files():
     local_folder_path = config['settings']['local_folder_path']
     skip_folders = config['settings']['skip_folders']
+    remote_address = config['sftp']['remote_address']
+    sftp_user = config['sftp']['username']
+    sftp_pass = config['sftp']['password']
 
-    file_processor = FileProcessor(skip_folders)
+    remote_manager = RemoteFileManager(remote_address, sftp_user, sftp_pass)
+    file_processor = FileProcessor(remote_manager, skip_folders)
     file_processor.process_files(local_folder_path)
 
 initialize()
