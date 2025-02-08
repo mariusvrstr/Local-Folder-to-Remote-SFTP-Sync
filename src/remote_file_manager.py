@@ -68,10 +68,10 @@ class RemoteFileManager:
             logger.error(f"Failed to transfer file: {e}")
 
     def __del__(self):
-
-        if self.client:
+        if self.sftp:
             self.sftp.close()
+        if self.client:
             self.client.close()
             
-            if logger:
-                logger.info("Connection closed.")
+        if logger:
+            logger.info("Connection closed.")

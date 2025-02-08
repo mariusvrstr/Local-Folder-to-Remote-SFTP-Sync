@@ -9,7 +9,9 @@ config = configparser.ConfigParser()
 
 def initialize():
     config.read('config.ini')
-    logger.info(f'Started the SFTP sync application. Debug: [{config['settings']['debug']}]')
+    debug_value = config['settings']['debug']
+
+    logger.info(f'Started the SFTP sync application. Debug: [{debug_value}]')
 
 def process_all_files():
     local_folder_path = config['settings']['local_folder_path']
